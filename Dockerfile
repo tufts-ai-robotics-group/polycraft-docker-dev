@@ -3,6 +3,18 @@ FROM ubuntu:18.04
 RUN apt-get update
 RUN apt-get install -y \
     git
+# Python packages
+RUN apt-get install -y \
+    python3.8-dev \
+    python3-pip
+# PAL packages
+RUN apt-get install -y \
+    openjdk-8-jdk
+# ADE packages
+RUN apt-get install -y \
+    ant \
+    openjdk-8-jdk
+
 # copy GitLab ssh key provided in folder
 RUN mkdir /root/.ssh/
 COPY id_rsa /root/.ssh/id_rsa
@@ -11,10 +23,12 @@ RUN chmod 400 /root/.ssh/id_rsa
 RUN touch /root/.ssh/known_hosts && \
     ssh-keyscan -t rsa -p 22222 hrilab.tufts.edu >> /root/.ssh/known_hosts && \
     ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
+
 # create code dir
 ENV CODE /home/docker/code
 RUN mkdir -p ${CODE}
 WORKDIR ${CODE}
+
 # clone PAL
 WORKDIR ${CODE}
 RUN git clone -b release_1.3 --single-branch https://github.com/StephenGss/PAL.git
@@ -26,4 +40,3 @@ WORKDIR ${CODE}
 RUN git clone -b polycraft-v1 --single-branch ssh://git@hrilab.tufts.edu:22222/ade/ade.git
 # remove SSH key
 RUN rm /root/.ssh/id_rsa
-
