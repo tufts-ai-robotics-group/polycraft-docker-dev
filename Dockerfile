@@ -37,22 +37,31 @@ WORKDIR ${CODE_DIR}
 # clone PAL
 WORKDIR ${CODE_DIR}
 RUN git clone -b release_1.3 --single-branch https://github.com/StephenGss/PAL.git
-# clone NovelGridworlds
-WORKDIR ${CODE_DIR}
-RUN git clone -b master --single-branch https://github.com/gtatiya/gym-novel-gridworlds.git
-# clone polycraft_tufts and set up pipenv
-WORKDIR ${CODE_DIR}
-RUN git clone -b master --single-branch git@github.com:tufts-ai-robotics-group/polycraft_tufts.git
-WORKDIR ${CODE_DIR}/polycraft_tufts
-RUN pipenv install --skip-lock \
-    pandas \
-    astar \
-    -e ../gym-novel-gridworlds
 # clone and build ADE
 WORKDIR ${CODE_DIR}
 RUN git clone -b polycraft-v1 --single-branch ssh://git@hrilab.tufts.edu:22222/ade/ade.git
 WORKDIR ${CODE_DIR}/ade
 RUN ant
+# clone NovelGridworlds
+WORKDIR ${CODE_DIR}
+RUN git clone -b master --single-branch https://github.com/gtatiya/gym-novel-gridworlds.git
+# clone polycraft_tufts
+WORKDIR ${CODE_DIR}
+RUN git clone -b master --single-branch git@github.com:tufts-ai-robotics-group/polycraft_tufts.git
+# clone polycraft-novelty-detection
+WORKDIR ${CODE_DIR}
+RUN git clone --recurse-submodules https://github.com/tufts-ai-robotics-group/polycraft-novelty-detection.git
+# set up pipenv
+WORKDIR ${CODE_DIR}
+RUN pipenv install --skip-lock \
+    pandas \
+    astar \
+    -e gym-novel-gridworlds \
+    torch \
+    torchvision \
+    torchaudio \
+    -e polycraft-novelty-detection \
+    -e polycraft-novelty-detection/submodules/polycraft-novelty-data
 
 # remove SSH key
 RUN rm /root/.ssh/id_rsa

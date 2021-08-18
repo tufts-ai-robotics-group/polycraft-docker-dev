@@ -1,3 +1,5 @@
+# set Pipenv to use in this script
+export PIPENV_PIPFILE=${CODE_DIR}/Pipfile
 # run NovelGridworlds socket
 cd ${CODE_DIR}/polycraft_tufts/envs/novel_gridworlds_tests
 pipenv run python3 socket_env_polycraft.py &
