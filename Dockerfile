@@ -7,6 +7,7 @@ RUN apt-get install -y \
 RUN apt-get install -y \
     python3.8-dev \
     python3-pip
+RUN pip3 install pipenv
 # PAL packages
 RUN apt-get install -y \
     openjdk-8-jdk
@@ -35,8 +36,13 @@ RUN git clone -b release_1.3 --single-branch https://github.com/StephenGss/PAL.g
 # clone polycraft_tufts
 WORKDIR ${CODE}
 RUN git clone -b master --single-branch git@github.com:tufts-ai-robotics-group/polycraft_tufts.git
-# clone ADE
+# clone and build ADE
 WORKDIR ${CODE}
 RUN git clone -b polycraft-v1 --single-branch ssh://git@hrilab.tufts.edu:22222/ade/ade.git
+WORKDIR ${CODE}/ade
+RUN ant
 # remove SSH key
 RUN rm /root/.ssh/id_rsa
+
+# set final working directory
+WORKDIR ${CODE}
