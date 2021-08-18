@@ -16,7 +16,7 @@ RUN apt-get install -y \
     ant \
     openjdk-8-jdk
 
-# copy GitLab ssh key provided in folder
+# copy ssh key provided in folder
 RUN mkdir /root/.ssh/
 COPY id_rsa /root/.ssh/id_rsa
 RUN chmod 400 /root/.ssh/id_rsa
@@ -25,24 +25,41 @@ RUN touch /root/.ssh/known_hosts && \
     ssh-keyscan -t rsa -p 22222 hrilab.tufts.edu >> /root/.ssh/known_hosts && \
     ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 
+# Set correct encoding for Python 
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
 # create code dir
-ENV CODE /home/docker/code
-RUN mkdir -p ${CODE}
-WORKDIR ${CODE}
+ENV CODE_DIR /home/docker/code
+RUN mkdir -p ${CODE_DIR}
+WORKDIR ${CODE_DIR}
 
 # clone PAL
-WORKDIR ${CODE}
+WORKDIR ${CODE_DIR}
 RUN git clone -b release_1.3 --single-branch https://github.com/StephenGss/PAL.git
-# clone polycraft_tufts
-WORKDIR ${CODE}
+# clone NovelGridworlds
+WORKDIR ${CODE_DIR}
+RUN git clone -b master --single-branch https://github.com/gtatiya/gym-novel-gridworlds.git
+# clone polycraft_tufts and set up pipenv
+WORKDIR ${CODE_DIR}
 RUN git clone -b master --single-branch git@github.com:tufts-ai-robotics-group/polycraft_tufts.git
+WORKDIR ${CODE_DIR}/polycraft_tufts
+RUN pipenv install --skip-lock \
+    pandas \
+    astar \
+    -e ../gym-novel-gridworlds
 # clone and build ADE
-WORKDIR ${CODE}
+WORKDIR ${CODE_DIR}
 RUN git clone -b polycraft-v1 --single-branch ssh://git@hrilab.tufts.edu:22222/ade/ade.git
-WORKDIR ${CODE}/ade
+WORKDIR ${CODE_DIR}/ade
 RUN ant
+
 # remove SSH key
 RUN rm /root/.ssh/id_rsa
 
+# copy scripts from repo
+ENV SCRIPTS_DIR /home/docker/scripts
+COPY docker_scripts ${SCRIPTS_DIR}
+
 # set final working directory
-WORKDIR ${CODE}
+WORKDIR ${SCRIPTS_DIR}
