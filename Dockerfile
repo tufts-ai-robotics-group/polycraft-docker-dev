@@ -10,11 +10,14 @@ RUN apt-get install -y \
 RUN pip3 install pipenv
 # PAL packages
 RUN apt-get install -y \
-    openjdk-8-jdk
+    openjdk-8-jdk \
+    gradle
 # ADE packages
 RUN apt-get install -y \
     ant \
     openjdk-8-jdk
+
+# TODO separate installing dependencies, cloning, and building as stages
 
 # copy ssh key provided in folder
 RUN mkdir /root/.ssh/
@@ -34,9 +37,11 @@ ENV CODE_DIR /home/docker/code
 RUN mkdir -p ${CODE_DIR}
 WORKDIR ${CODE_DIR}
 
-# clone PAL
+# clone and set up PAL
 WORKDIR ${CODE_DIR}
 RUN git clone -b release_1.3 --single-branch https://github.com/StephenGss/PAL.git
+WORKDIR ${CODE_DIR}/PAL/setup
+RUN bash setup_linux_shortened.sh
 # clone and build ADE
 WORKDIR ${CODE_DIR}
 RUN git clone -b polycraft-v1 --single-branch ssh://git@hrilab.tufts.edu:22222/ade/ade.git
@@ -54,6 +59,7 @@ RUN git clone --recurse-submodules https://github.com/tufts-ai-robotics-group/po
 # set up pipenv
 WORKDIR ${CODE_DIR}
 RUN pipenv install --skip-lock \
+    -r ${CODE_DIR}/PAL/requirements.txt \
     pandas \
     astar \
     -e gym-novel-gridworlds \
@@ -69,6 +75,8 @@ RUN rm /root/.ssh/id_rsa
 # copy scripts from repo
 ENV SCRIPTS_DIR /home/docker/scripts
 COPY docker_scripts ${SCRIPTS_DIR}
+# replace default PAL config.py
+COPY polycraft_config/config.py ${CODE_DIR}/PAL/PolycraftAIGym/config.py
 
 # set final working directory
 WORKDIR ${SCRIPTS_DIR}
