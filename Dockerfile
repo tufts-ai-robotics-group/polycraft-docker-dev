@@ -35,10 +35,10 @@ WORKDIR ${CODE_DIR}
 
 # clone PAL
 WORKDIR ${CODE_DIR}
-RUN git clone -b release_1.3 --single-branch https://github.com/StephenGss/PAL.git
+RUN git clone -b release_2.0 --single-branch https://github.com/StephenGss/PAL.git
 # clone ADE
 WORKDIR ${CODE_DIR}
-RUN git clone -b polycraft-v1 --single-branch ssh://git@hrilab.tufts.edu:22222/ade/ade.git
+RUN git clone -b polycraft-v2 --single-branch ssh://git@hrilab.tufts.edu:22222/ade/ade.git
 # clone NovelGridworlds
 WORKDIR ${CODE_DIR}
 RUN git clone -b master --single-branch https://github.com/gtatiya/gym-novel-gridworlds.git
