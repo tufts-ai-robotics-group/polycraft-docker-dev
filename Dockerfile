@@ -7,7 +7,7 @@ RUN apt-get install -y \
 RUN apt-get install -y \
     python3.8-dev \
     python3-pip
-RUN pip3 install pipenv
+RUN python3.8 -m pip install pipenv
 # PAL packages
 RUN apt-get install -y \
     openjdk-8-jdk \
@@ -68,7 +68,7 @@ WORKDIR ${CODE_DIR}/ade
 RUN ant
 # set up pipenv
 WORKDIR ${CODE_DIR}
-RUN pipenv install --skip-lock \
+RUN python3.8 -m pipenv install --skip-lock --python 3.8 \
     -r ${CODE_DIR}/PAL/requirements.txt \
     pandas \
     astar \
