@@ -8,7 +8,7 @@ PAL_COMMAND = "./gradlew runclient"
 # PAL_COMMAND_UNIX = "xvfb-run -s '-screen 0 1280x1024x24' ./gradlew --no-daemon --stacktrace runclient"
 # -c 1000 -t "POGO_L00_T01_S01_X0100_A_U9999_V0200FPS_011022" -g "../pogo_100_PN" -a "BASELINE_POGOPLAN_SPEEDTEST" -d "agents/pogo_stick_planner_agent/" -    x "python 1_python_miner_PLANNER_FF_1_vDN_EDITS.py"
 ## CONFIGURABLE ##################################### CLI Commands ####################################
-MAX_TIME = 500                                      # change using -i <time>
+MAX_TIME = 1500                                     # change using -i <time>
 MAX_TOURN_TIME = 2880                               # change using -m <minutes> 48 hours default
 TOURNAMENT_ID = "POGO_L00_T01_S01_X0100_A_U9999"    # change using -t <tournament_name>
 AGENT_DIRECTORY = "/home/docker/code/ade"           # change using -d <agent/start/script/folder/>
