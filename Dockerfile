@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 AS dependency
+FROM nvidia/cuda:10.2-base-ubuntu18.04 AS dependency
 
 RUN apt-get update
 RUN apt-get install -y \
