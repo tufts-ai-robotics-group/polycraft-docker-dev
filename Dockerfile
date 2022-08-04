@@ -1,5 +1,13 @@
 FROM nvidia/cuda:10.2-base-ubuntu18.04 AS dependency
 
+# update outdated CUDA keys
+RUN rm /etc/apt/sources.list.d/cuda.list && \
+    rm /etc/apt/sources.list.d/nvidia-ml.list && \
+    apt-key del 7fa2af80 && \
+    apt-get update && apt-get install -y --no-install-recommends wget && \
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb && \
+    dpkg -i cuda-keyring_1.0-1_all.deb
+# update packages and install git
 RUN apt-get update
 RUN apt-get install -y \
     git
@@ -72,12 +80,12 @@ RUN python3.8 -m pipenv install --skip-lock --python 3.8 \
     -r ${CODE_DIR}/PAL/requirements.txt \
     pandas \
     astar \
-    -e gym-novel-gridworlds \
     torch \
     torchvision \
     torchaudio \
     -e polycraft-novelty-detection \
     -e polycraft-novelty-detection/submodules/polycraft-novelty-data
+    # -e gym-novel-gridworlds \
 
 
 FROM build as final
