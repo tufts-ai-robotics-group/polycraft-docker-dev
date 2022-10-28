@@ -77,14 +77,22 @@ RUN ant
 # set up pipenv
 WORKDIR ${CODE_DIR}
 RUN python3.8 -m pipenv install --skip-lock --python 3.8 \
-    -r ${CODE_DIR}/PAL/requirements.txt \
     pandas \
-    astar \
     torch \
     torchvision \
     torchaudio \
     -e polycraft-novelty-detection \
-    -e polycraft-novelty-detection/submodules/polycraft-novelty-data
+    -e polycraft-novelty-detection/submodules/polycraft-novelty-data \
+    # PAL requirements but looser
+    # -r ${CODE_DIR}/PAL/requirements.txt \
+    astar \
+    azure-cosmosdb-table \
+    azure-storage-blob \
+    matplotlib \
+    statsmodels \
+    pyodbc \
+    filelock \
+    psutil
     # -e gym-novel-gridworlds \
 
 
